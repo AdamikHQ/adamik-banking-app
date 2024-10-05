@@ -70,4 +70,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 For more information or support, please visit our website at [adamik.io](https://adamik.io).
 
-Join our community on [Discord](https://discord.com/invite/qe4HEQSQ7b) to connect with other users and get real-time assistance.
+Join our community on [Discord](https://discord.gg/qe4HEQSQ7b) to connect with other users and get real-time assistance.
