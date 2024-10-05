@@ -9,10 +9,12 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useAccount } from "../providers/AccountProvider";
-import { RootStackParamList } from "../app/_layout";
+// Remove or comment out the following line:
+// import { RootStackParamList } from "../app/_layout";
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
-  const navigation = useNavigation<DrawerNavigationProp<RootStackParamList>>();
+  // Update the type annotation for navigation
+  const navigation = useNavigation<DrawerNavigationProp<any>>();
   const { setAccountId } = useAccount();
 
   const handleLogout = () => {

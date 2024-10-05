@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import Icon from "react-native-vector-icons/MaterialIcons"; // Make sure to install this package
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../app/_layout"; // Import the updated RootStackParamList
+import { RootStackParamList } from "../app/types"; // Update this import
 import { useAccount } from "../providers/AccountProvider"; // Add this import
 
 // Remove the following line:

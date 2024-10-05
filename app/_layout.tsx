@@ -1,9 +1,17 @@
 import { Stack } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AccountProvider } from "../providers/AccountProvider";
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="index" />
-    </Stack>
+    <QueryClientProvider client={queryClient}>
+      <AccountProvider initialAccountId="000111230">
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+      </AccountProvider>
+    </QueryClientProvider>
   );
 }

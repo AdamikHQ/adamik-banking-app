@@ -1,35 +1,52 @@
-import React, { useState } from "react";
-import { View, Text, Button, SafeAreaView, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { useAccount } from "../providers/AccountProvider";
+import * as Clipboard from "expo-clipboard";
+import { Ionicons } from "@expo/vector-icons"; // Make sure to install @expo/vector-icons if not already installed
+
+interface CryptoAsset {
+  chainId: string;
+  address: string;
+  provider: string;
+  balance: string;
+}
 
 const CryptoMenuScreen: React.FC = () => {
-  const [response, setResponse] = useState<string | null>(null);
+  const [assets, setAssets] = useState<CryptoAsset[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { accountId } = useAccount();
 
-  const makeTestRequest = async () => {
-    console.log("Making test request...");
+  const fetchUserInfo = async () => {
+    console.log("Fetching user info...");
+    console.log("Current accountId:", accountId);
     setIsLoading(true);
-    setResponse(null);
+    setAssets([]);
     setError(null);
 
     try {
-      console.log(
-        "Sending POST request to https://jsonplaceholder.typicode.com/posts"
-      );
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/posts",
-        {
-          method: "POST", // Change to POST
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "foo",
-            body: "bar",
-            userId: 1,
-          }), // Add body for POST request
-        }
-      );
+      // Confirm that accountId is populated from the login screen
+      if (!accountId) {
+        throw new Error("Account ID is not available. Please log in again.");
+      }
+
+      console.log("Sending request with accountId:", accountId);
+
+      const response = await fetch("https://cryptopod.vercel.app/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: accountId }),
+      });
 
       console.log("Response status:", response.status);
 
@@ -40,7 +57,7 @@ const CryptoMenuScreen: React.FC = () => {
       const data = await response.json();
       console.log("Request successful.");
       console.log("Response data:", JSON.stringify(data));
-      setResponse(JSON.stringify(data, null, 2));
+      setAssets(data);
     } catch (err) {
       console.error("Request failed:", err);
       setError(
@@ -52,35 +69,107 @@ const CryptoMenuScreen: React.FC = () => {
     }
   };
 
-  console.log("Rendering CryptoMenuScreen", { response, error, isLoading });
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  const getChainIcon = (chainId: string) => {
+    const iconMap: { [key: string]: any } = {
+      sepolia: require("../assets/ethereum.png"),
+      "bitcoin-testnet": require("../assets/bitcoin.png"),
+      tron: require("../assets/tron.png"),
+    };
+    return iconMap[chainId] || require("../assets/default.png");
+  };
+
+  const getProviderLogo = (provider: string) => {
+    const logoMap: { [key: string]: any } = {
+      narval: require("../assets/narval.png"),
+      fireblocks: require("../assets/fireblocks.png"),
+      adamik: require("../assets/adamik.png"),
+    };
+    return logoMap[provider] || require("../assets/default.png");
+  };
+
+  const copyToClipboard = async (text: string) => {
+    await Clipboard.setStringAsync(text);
+    // You might want to show a toast or some feedback that the address was copied
+  };
+
+  const renderAssetItem = ({ item }: { item: CryptoAsset }) => (
+    <TouchableOpacity
+      style={styles.assetItem}
+      onPress={() => copyToClipboard(item.address)}
+    >
+      <View style={styles.iconContainer}>
+        <Image
+          source={getChainIcon(item.chainId)}
+          style={styles.chainIcon}
+          resizeMode="contain"
+        />
+      </View>
+      <View style={styles.assetInfo}>
+        <Text style={styles.chainName}>{item.chainId}</Text>
+        <Text style={styles.address} numberOfLines={1} ellipsizeMode="middle">
+          {item.address}
+        </Text>
+        <Text style={styles.balance}>Balance: {item.balance}</Text>
+      </View>
+      <Image
+        source={getProviderLogo(item.provider)}
+        style={styles.providerLogo}
+      />
+    </TouchableOpacity>
+  );
+
+  console.log("Rendering CryptoMenuScreen", { Response, error, isLoading });
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Test API Request</Text>
-      <Button
-        title={isLoading ? "Loading..." : "Make Test Request"}
-        onPress={makeTestRequest}
-        disabled={isLoading}
-      />
-      {isLoading && <Text>Making request...</Text>}
-      {response && (
-        <View style={styles.responseContainer}>
-          <Text style={styles.responseTitle}>Response:</Text>
-          <Text>{response}</Text>
-        </View>
-      )}
-      {error && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorTitle}>Error:</Text>
-          <Text>{error}</Text>
-        </View>
-      )}
+      <View style={styles.header}>
+        <Text style={styles.title}>Available Assets</Text>
+        <TouchableOpacity
+          onPress={fetchUserInfo}
+          disabled={isLoading}
+          style={styles.refreshButton}
+        >
+          <Ionicons
+            name="refresh"
+            size={24}
+            color={isLoading ? "#999" : "#000"}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.content}>
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Refreshing...</Text>
+          </View>
+        )}
+        {assets.length > 0 && (
+          <FlatList
+            data={assets}
+            renderItem={renderAssetItem}
+            keyExtractor={(item) => item.chainId}
+            style={styles.assetList}
+          />
+        )}
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorTitle}>Error:</Text>
+            <Text>{error}</Text>
+          </View>
+        )}
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  content: {
     flex: 1,
     padding: 16,
   },
@@ -109,6 +198,70 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "red",
     marginBottom: 8,
+  },
+  assetItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 16,
+  },
+  chainIcon: {
+    width: "100%",
+    height: "100%",
+  },
+  assetInfo: {
+    flex: 1,
+  },
+  chainName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  address: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 8,
+  },
+  balance: {
+    fontSize: 16,
+    color: "#666",
+  },
+  providerLogo: {
+    width: 24,
+    height: 24,
+    marginLeft: 16,
+  },
+  assetList: {
+    marginTop: 16,
+  },
+  refreshButton: {
+    padding: 8,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    textAlign: "center",
+    color: "#666",
+    fontSize: 16,
   },
 });
 
