@@ -1,12 +1,12 @@
-import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({title, onPress}) => {
+const Button: React.FC<ButtonProps> = ({ title, onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>
@@ -16,13 +16,13 @@ const Button: React.FC<ButtonProps> = ({title, onPress}) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#F77803',
+    backgroundColor: "#F7931A", // Bitcoin orange
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });

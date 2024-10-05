@@ -11,6 +11,7 @@ import {
 import { useAccount } from "../providers/AccountProvider";
 import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons"; // Make sure to install @expo/vector-icons if not already installed
+import Button from "../components/Button";
 
 interface CryptoAsset {
   chainId: string;
@@ -161,6 +162,20 @@ const CryptoMenuScreen: React.FC = () => {
           </View>
         )}
       </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttonWrapper}>
+          <Button
+            title="Deposit"
+            onPress={() => console.log("Deposit pressed")}
+          />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            title="Withdraw"
+            onPress={() => console.log("Withdraw pressed")}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -262,6 +277,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#666",
     fontSize: 16,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    marginBottom: 20,
+    paddingHorizontal: 16,
+  },
+  buttonWrapper: {
+    flex: 1,
+    marginHorizontal: 5,
   },
 });
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -24,26 +24,37 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={styles.drawerContent}>
-        <DrawerItemList {...props} />
-        <View style={styles.logoutContainer}>
-          <Icon.Button
-            name="exit-to-app"
-            backgroundColor="transparent"
-            color="#000"
-            onPress={handleLogout}
-          >
-            Logout
-          </Icon.Button>
-        </View>
+      <View style={styles.logoContainer}>
+        <Image
+          source={require("../assets/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
+      <DrawerItemList {...props} />
+      <View style={styles.logoutContainer}>
+        <Icon.Button
+          name="exit-to-app"
+          backgroundColor="transparent"
+          color="#000"
+          onPress={handleLogout}
+        >
+          Logout
+        </Icon.Button>
       </View>
     </DrawerContentScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
+  logoContainer: {
+    alignItems: "flex-start", // Change this to align the logo to the left
+    marginVertical: 20,
+    marginRight: 20, // Add some right margin for better spacing
+  },
+  logo: {
+    width: 255, // Increase width by 1.7 times (150 * 1.7 ≈ 255)
+    height: 255, // Increase height by 1.7 times (150 * 1.7 ≈ 255)
   },
   logoutContainer: {
     // Add styles for the logout container if needed
