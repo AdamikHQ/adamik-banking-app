@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
-import {View, Animated, Easing, StyleSheet} from 'react-native';
-import {NavigationProp, ParamListBase} from '@react-navigation/native';
+import React, { useEffect } from "react";
+import { View, Animated, Easing, StyleSheet } from "react-native";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 interface SplashScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
   const logoAnim = new Animated.Value(0);
 
   useEffect(() => {
@@ -16,12 +16,12 @@ const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
         duration: 800,
         easing: Easing.linear,
         useNativeDriver: true,
-      }),
+      })
     ).start();
 
-    // Navigate to Login screen after 5 seconds
+    // Navigate to Login screen after 1 second
     const timer = setTimeout(() => {
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -29,17 +29,17 @@ const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
 
   const spin = logoAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require('../assets/logo.png')}
+        source={require("../assets/logo.png")}
         style={[
           styles.logo,
           {
-            transform: [{rotate: spin}],
+            transform: [{ rotate: spin }],
           },
         ]}
       />
@@ -50,14 +50,14 @@ const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   logo: {
-    width: 225, // Increased from 150 to 225 (50% larger)
-    height: 225, // Increased from 150 to 225 (50% larger)
-    resizeMode: 'contain',
+    width: 337.5, // Increased from 225 to 337.5 (1.5 times larger)
+    height: 337.5, // Increased from 225 to 337.5 (1.5 times larger)
+    resizeMode: "contain",
   },
 });
 

@@ -59,7 +59,7 @@ function DrawerNavigator() {
 function RootStackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="MainDrawer"
+      initialRouteName="Splash"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Splash" component={SplashScreen} />
