@@ -121,8 +121,8 @@ const LoginScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/logo.png")} // Adjust the path as needed
-        style={styles.logo} // Adjust the style as needed
+        source={require("../assets/logo.png")}
+        style={[styles.logo, { width: 280, height: 140 }]} // Increased size by 1.4
         resizeMode="contain"
       />
       <Text style={styles.title}>Enter your client number and pin code</Text>
