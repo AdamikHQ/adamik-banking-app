@@ -1,4 +1,6 @@
-  <img src="assets/logo.png" alt="Adamik Banking App Logo" width="200"/>
+  <p align="center">
+    <img src="assets/logo.png" alt="Adamik Banking App Logo" width="400"/>
+  </p>
 
 A comprehensive mobile application for managing both traditional bank accounts and cryptocurrencies, offering a wide range of features to streamline your financial activities.
 
