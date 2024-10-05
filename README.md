@@ -7,11 +7,8 @@ A comprehensive mobile application for managing both traditional bank accounts a
 ## Features
 
 - Balance tracking for traditional bank accounts and cryptocurrencies
-- Transaction history and details
-- Easy money transfers between accounts and to other users
-- Real-time cryptocurrency price tracking
-- Secure authentication and data encryption
-- Push notifications for account activities and market updates
+- Real-time cryptocurrency tracking
+- Secure authentication
 
 ## Technologies Used
 
