@@ -18,6 +18,7 @@ interface CryptoAsset {
   address: string;
   provider: string;
   balance: string;
+  isSupported: boolean; // New property
 }
 
 const CryptoMenuScreen: React.FC = () => {
@@ -56,9 +57,13 @@ const CryptoMenuScreen: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Request successful.");
-      console.log("Response data:", JSON.stringify(data));
-      setAssets(data);
+      const processedAssets = data.map((asset: CryptoAsset) => ({
+        ...asset,
+        isSupported: !(
+          asset.provider === "fireblocks" && asset.chainId === "defi-kingdoms"
+        ),
+      }));
+      setAssets(processedAssets);
     } catch (err) {
       console.error("Request failed:", err);
       setError(
@@ -123,31 +128,57 @@ const CryptoMenuScreen: React.FC = () => {
 
   const renderAssetItem = ({ item }: { item: CryptoAsset }) => (
     <TouchableOpacity
-      style={styles.assetItem}
-      onPress={() => copyToClipboard(item.address)}
+      style={[
+        styles.assetItem,
+        !item.isSupported && styles.unsupportedAssetItem,
+      ]}
+      onPress={() => item.isSupported && copyToClipboard(item.address)}
+      disabled={!item.isSupported}
     >
       <View style={styles.iconContainer}>
         <Image
           source={getChainIcon(item.chainId)}
-          style={styles.chainIcon}
+          style={[
+            styles.chainIcon,
+            !item.isSupported && styles.unsupportedIcon,
+          ]}
           resizeMode="contain"
         />
       </View>
       <View style={styles.assetInfo}>
-        <Text style={styles.chainName}>
+        <Text
+          style={[
+            styles.chainName,
+            !item.isSupported && styles.unsupportedText,
+          ]}
+        >
           {getChainDisplayName(item.chainId)}
         </Text>
-        <Text style={styles.address} numberOfLines={1} ellipsizeMode="middle">
+        <Text
+          style={[styles.address, !item.isSupported && styles.unsupportedText]}
+          numberOfLines={1}
+          ellipsizeMode="middle"
+        >
           {item.address}
         </Text>
-        <Text style={styles.balance}>
+        <Text
+          style={[styles.balance, !item.isSupported && styles.unsupportedText]}
+        >
           Balance: {item.balance} {getChainTicker(item.chainId)}
         </Text>
       </View>
       <Image
         source={getProviderLogo(item.provider)}
-        style={styles.providerLogo}
+        style={[
+          styles.providerLogo,
+          !item.isSupported && styles.unsupportedIcon,
+        ]}
       />
+      {!item.isSupported && (
+        <View style={styles.unsupportedOverlay}>
+          <Text style={styles.unsupportedOverlayText}>Not Supported</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 
@@ -316,6 +347,33 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     flex: 1,
     marginHorizontal: 5,
+  },
+  unsupportedAssetItem: {
+    opacity: 0.7, // Slightly increase opacity to make content more visible
+  },
+  unsupportedIcon: {
+    opacity: 0.5,
+  },
+  unsupportedText: {
+    color: "#999",
+  },
+  unsupportedOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(255, 255, 255, 0.2)", // More transparent background
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  unsupportedOverlayText: {
+    color: "#333", // Even darker color for better visibility
+    fontWeight: "bold",
+    fontSize: 18, // Larger font size
+    textShadowColor: "rgba(255, 255, 255, 0.5)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });
 
