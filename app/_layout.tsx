@@ -7,7 +7,7 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AccountProvider initialAccountId="000111230">
+      <AccountProvider initialAccountId="">
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>

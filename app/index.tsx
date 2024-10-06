@@ -72,7 +72,7 @@ function RootStackNavigator() {
 export default function Index() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AccountProvider initialAccountId="000111230">
+      <AccountProvider initialAccountId="">
         <RootStackNavigator />
       </AccountProvider>
     </QueryClientProvider>
