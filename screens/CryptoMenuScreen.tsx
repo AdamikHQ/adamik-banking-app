@@ -79,6 +79,8 @@ const CryptoMenuScreen: React.FC = () => {
       sepolia: require("../assets/ethereum.png"),
       "bitcoin-testnet": require("../assets/bitcoin.png"),
       tron: require("../assets/tron.png"),
+      "avalanche-fuji": require("../assets/avalanche.png"),
+      "defi-kingdoms": require("../assets/dfk.png"),
     };
     return iconMap[chainId] || require("../assets/default.png");
   };
@@ -97,6 +99,28 @@ const CryptoMenuScreen: React.FC = () => {
     // You might want to show a toast or some feedback that the address was copied
   };
 
+  const getChainDisplayName = (chainId: string): string => {
+    const displayNames: { [key: string]: string } = {
+      sepolia: "Ethereum (test)",
+      tron: "Tron",
+      "bitcoin-testnet": "Bitcoin (test)",
+      "avalanche-fuji": "Avalanche (test)",
+      "defi-kingdoms": "Defi Kingdoms",
+    };
+    return displayNames[chainId] || chainId;
+  };
+
+  const getChainTicker = (chainId: string): string => {
+    const tickers: { [key: string]: string } = {
+      sepolia: "ETH",
+      tron: "TRX",
+      "bitcoin-testnet": "tBTC",
+      "avalanche-fuji": "AVAX",
+      "defi-kingdoms": "JEWEL",
+    };
+    return tickers[chainId] || "";
+  };
+
   const renderAssetItem = ({ item }: { item: CryptoAsset }) => (
     <TouchableOpacity
       style={styles.assetItem}
@@ -110,11 +134,15 @@ const CryptoMenuScreen: React.FC = () => {
         />
       </View>
       <View style={styles.assetInfo}>
-        <Text style={styles.chainName}>{item.chainId}</Text>
+        <Text style={styles.chainName}>
+          {getChainDisplayName(item.chainId)}
+        </Text>
         <Text style={styles.address} numberOfLines={1} ellipsizeMode="middle">
           {item.address}
         </Text>
-        <Text style={styles.balance}>Balance: {item.balance}</Text>
+        <Text style={styles.balance}>
+          Balance: {item.balance} {getChainTicker(item.chainId)}
+        </Text>
       </View>
       <Image
         source={getProviderLogo(item.provider)}

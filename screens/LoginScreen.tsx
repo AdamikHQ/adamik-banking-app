@@ -38,8 +38,8 @@ const LoginScreen: React.FC = () => {
   const { setAccountId } = useAccount(); // Update this line
 
   const handleLogin = () => {
-    if (accountNumber.length < 10) {
-      setErrorMessage("Account number must be 10 digits");
+    if (accountNumber.length < 9) {
+      setErrorMessage("Account number must be 9 digits");
     } else if (pinCode.length < 6) {
       setErrorMessage("PIN code must be 6 digits");
     } else {
@@ -66,7 +66,7 @@ const LoginScreen: React.FC = () => {
 
   const handleAccountNumberChange = (text: string) => {
     const numericText = text.replace(/[^0-9]/g, "");
-    const limitedText = numericText.slice(0, 10);
+    const limitedText = numericText.slice(0, 9);
     setAccountNumber(limitedText);
   };
 
@@ -125,14 +125,16 @@ const LoginScreen: React.FC = () => {
         style={[styles.logo, { width: 280, height: 140 }]} // Increased size by 1.4
         resizeMode="contain"
       />
-      <Text style={styles.title}>Enter your client number and pin code</Text>
+      <Text style={[styles.title, { fontSize: 20, color: "#666" }]}>
+        Enter your client number and pin code
+      </Text>
       <Input
         // Remove the ref prop
         placeholder="Account Number"
         onChangeText={handleAccountNumberChange}
         value={accountNumber}
         keyboardType="numeric"
-        maxLength={10}
+        maxLength={9}
         onFocus={handleAccountNumberFocus}
         onBlur={handleAccountNumberBlur}
       />
